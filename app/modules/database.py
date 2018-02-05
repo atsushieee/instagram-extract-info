@@ -27,6 +27,21 @@ class SqlManipulator:
         self.cur.execute("select * from " + table_name + " where " + insert_column + " = " + insert_value)
         return self.cur.fetchall()
 
+    def select_not_records(self, table_name, insert_column):
+        self.cur.execute("select * from " + table_name + " where " + insert_column + " IS NULL")
+        return self.cur.fetchall()
+
+    def select_all_records(self, table_name):
+        self.cur.execute("select * from " + table_name)
+        return self.cur.fetchall()
+
+    def select_like_records(self, table_name, selected_column1, selected_column2, select_column, words_array):
+        if len(words_array) == 3:
+            self.cur.execute("select " + selected_column1 + ", " + selected_column2 + " from " + table_name + " where text LIKE '%" + words_array[0] + "%' OR text LIKE '%" + words_array[1] + "%' OR text LIKE '%" + words_array[2] + "%'")
+        if len(words_array) == 6:
+            self.cur.execute("select " + selected_column1 + ", " + selected_column2 + " from " + table_name + " where text LIKE '%" + words_array[0] + "%' OR text LIKE '%" + words_array[1] + "%' OR text LIKE '%" + words_array[2] + "%' OR text LIKE '%" + words_array[3] + "%' OR text LIKE '%" + words_array[4] + "%' OR text LIKE '%" + words_array[5] + "%'")
+        return self.cur.fetchall()
+
     def update_record(self, table_name, update_column, update_value, base_column, base_update, is_int=0):
         if is_int == 1:
             update_value = str(update_value)
@@ -34,3 +49,5 @@ class SqlManipulator:
         #print("update " + table_name + " set " + update_column + " = " + update_value + " where " + base_column + " = " + base_update)
         self.cur.execute("update " + table_name + " set " + update_column + " = " + update_value + " where " + base_column + " = " + base_update)
         self.conn.commit()
+
+    #def write_csv(self, table_name, )
